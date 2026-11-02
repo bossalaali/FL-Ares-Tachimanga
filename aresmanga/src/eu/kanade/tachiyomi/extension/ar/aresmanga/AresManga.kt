@@ -16,6 +16,7 @@ import keiyoushi.utils.tryParse
 import okhttp3.HttpUrl
 import okhttp3.HttpUrl.Companion.toHttpUrl
 import org.jsoup.nodes.Document
+import kotlinx.serialization.json.JsonElement
 import kotlin.time.Instant
 
 @Source
@@ -23,10 +24,16 @@ abstract class AresManga : KeiSource() {
 
     // ============================== Catalog ==============================
 
-    private suspend fun catalog(page: Int, query: String = "", sort: String? = null): MangasPage {
+    private suspend fun catalog(
+        page: Int,
+        query: String = "",
+        sort: String? = null,
+        filters: FilterList = FilterList(),
+    ): MangasPage {
         val apiUrl = "$baseUrl/api/catalog".toHttpUrl().newBuilder().apply {
             if (query.isNotBlank()) addQueryParameter("q", query.trim())
             if (sort != null) addQueryParameter("sort", sort)
+            filters.filterIsInstance<SelectFilter>().forEach { it.addTo(this) }
             addQueryParameter("page", page.toString())
         }.build()
         val data = client.get(apiUrl, Fetch.XHR).parseAs<CatalogDto>()
@@ -44,7 +51,9 @@ abstract class AresManga : KeiSource() {
 
     override suspend fun getLatestUpdates(page: Int) = catalog(page, sort = "updated_at")
 
-    override suspend fun getSearchMangaList(page: Int, query: String, filters: FilterList) = catalog(page, query)
+    override suspend fun getSearchMangaList(page: Int, query: String, filters: FilterList) = catalog(page, query, filters = filters)
+
+    override fun getFilterList(data: JsonElement?) = aresFilterList()
 
     override suspend fun getMangaByUrl(url: HttpUrl): SManga? {
         val slug = url.pathSegments.getOrNull(1)?.takeIf { url.pathSegments.firstOrNull() == "manga" } ?: return null
