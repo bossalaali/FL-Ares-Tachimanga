@@ -11,13 +11,13 @@
         "name": "ARESManga",
         "packageName": "eu.kanade.tachiyomi.extension.ar.aresmanga",
         "resources": {
-          "apkUrl": "https://raw.githubusercontent.com/bossalaali/FL-Ares-Tachimanga/repo/apk/tachiyomi-ar.aresmanga-v1.6.2.apk",
+          "apkUrl": "https://raw.githubusercontent.com/bossalaali/FL-Ares-Tachimanga/repo/apk/tachiyomi-ar.aresmanga-v1.6.3.apk",
           "iconUrl": "https://cdn.jsdelivr.net/gh/keiyoushi/extensions-source@main/lib-multisrc/mangathemesia/res/mipmap-xhdpi/ic_launcher.png",
-          "jarUrl": "https://raw.githubusercontent.com/bossalaali/FL-Ares-Tachimanga/repo/jar/tachiyomi-ar.aresmanga-v1.6.2.jar"
+          "jarUrl": "https://raw.githubusercontent.com/bossalaali/FL-Ares-Tachimanga/repo/jar/tachiyomi-ar.aresmanga-v1.6.3.jar"
         },
         "extensionLib": "1.6",
-        "versionCode": "106002",
-        "versionName": "1.6.2",
+        "versionCode": "106003",
+        "versionName": "1.6.3",
         "contentWarning": "CONTENT_WARNING_SAFE",
         "sources": [
           {
