@@ -111,6 +111,7 @@ jobs:
           KEY_PASSWORD: extpass
         run: |
           cd kei
+          ./gradlew :src:ar:aresmanga:spotlessApply
           ./gradlew :src:ar:aresmanga:assembleRelease
 
       - name: Write repo (index.pb, index.json, index.min.json)
