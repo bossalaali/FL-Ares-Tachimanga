@@ -1,0 +1,21 @@
+name: Probe site
+on: workflow_dispatch
+permissions:
+  contents: read
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fetch pages
+        run: |
+          UA="Mozilla/5.0 (Linux; Android 14) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0 Mobile Safari/537.36"
+          mkdir p
+          for u in "/" "/series/" "/series/?page=1&order=popular" "/manga/?page=1&order=popular" "/series/list-mode/" "/where-the-heart-is-chapter-1/" "/wp-json/" "/sitemap.xml"; do
+            f=p/$(echo "$u" | tr -c 'a-zA-Z0-9' '_').html
+            code=$(curl -sSL -A "$UA" -o "$f" -w "%{http_code} %{url_effective}" "https://fl-ares.com$u")
+            echo "== $u -> $code size=$(wc -c <"$f")"
+          done
+      - uses: actions/upload-artifact@v4
+        with:
+          name: pages
+          path: p
