@@ -24,12 +24,12 @@ abstract class AresManga : KeiSource() {
     // ============================== Catalog ==============================
 
     private suspend fun catalog(page: Int, query: String = "", sort: String? = null): MangasPage {
-        val url = "$baseUrl/api/catalog".toHttpUrl().newBuilder().apply {
+        val apiUrl = "$baseUrl/api/catalog".toHttpUrl().newBuilder().apply {
             if (query.isNotBlank()) addQueryParameter("q", query.trim())
             if (sort != null) addQueryParameter("sort", sort)
             addQueryParameter("page", page.toString())
         }.build()
-        val data = client.get(url, Fetch.XHR).parseAs<CatalogDto>()
+        val data = client.get(apiUrl, Fetch.XHR).parseAs<CatalogDto>()
         val mangas = data.items.map { item ->
             SManga.create().apply {
                 url = "/manga/${item.slug}"
