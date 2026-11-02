@@ -1,0 +1,33 @@
+{
+  "name": "My Extensions",
+  "badgeLabel": "ME",
+  "signingKey": "ed24cfb9e081024901693c290a6df18b8835a3147533e94394bdb1c75cac3648",
+  "contact": {
+    "website": "https://github.com/bossalaali/FL-Ares-Tachimanga"
+  },
+  "extensionList": {
+    "extensions": [
+      {
+        "name": "ARESManga",
+        "packageName": "eu.kanade.tachiyomi.extension.ar.aresmanga",
+        "resources": {
+          "apkUrl": "https://raw.githubusercontent.com/bossalaali/FL-Ares-Tachimanga/repo/apk/tachiyomi-ar.aresmanga-v1.6.2.apk",
+          "iconUrl": "https://cdn.jsdelivr.net/gh/keiyoushi/extensions-source@main/lib-multisrc/mangathemesia/res/mipmap-xhdpi/ic_launcher.png",
+          "jarUrl": "https://raw.githubusercontent.com/bossalaali/FL-Ares-Tachimanga/repo/jar/tachiyomi-ar.aresmanga-v1.6.2.jar"
+        },
+        "extensionLib": "1.6",
+        "versionCode": "106002",
+        "versionName": "1.6.2",
+        "contentWarning": "CONTENT_WARNING_SAFE",
+        "sources": [
+          {
+            "id": "8208928319658871152",
+            "name": "\u0623\u0631\u064a\u0633 \u0645\u0627\u0646\u062c\u0627",
+            "language": "ar",
+            "homeUrl": "https://fl-ares.com"
+          }
+        ]
+      }
+    ]
+  }
+}
