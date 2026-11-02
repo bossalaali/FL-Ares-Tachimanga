@@ -6,14 +6,19 @@ plugins {
 
 keiyoushi {
     name = "ARESManga"
-    versionCode = 1
+    versionCode = 2
     contentWarning = ContentWarning.SAFE
     libVersion = "1.6"
-    theme = "mangathemesia"
 
     source {
         name = "أريس مانجا"
         lang = "ar"
         baseUrl = "https://fl-ares.com"
+        // Site moved from WordPress (MangaThemesia) to a custom Next.js app
+        versionId = 2
+    }
+
+    deeplink {
+        path("/manga/..*")
     }
 }
