@@ -58,7 +58,14 @@ class AnilistResponse(val data: AnilistData? = null)
 class AnilistData(@SerialName("Media") val media: AnilistMedia? = null)
 
 @Serializable
-class AnilistMedia(val coverImage: AnilistCover? = null)
+class AnilistMedia(
+    val title: AnilistTitle? = null,
+    val synonyms: List<String> = emptyList(),
+    val coverImage: AnilistCover? = null,
+)
+
+@Serializable
+class AnilistTitle(val romaji: String? = null, val english: String? = null)
 
 @Serializable
 class AnilistCover(val large: String? = null)

@@ -168,9 +168,14 @@ abstract class AresManga : KeiSource() {
     /** Some covers on the site are dead links; fall back to AniList's cover for the same title. */
     private suspend fun anilistCover(title: String): String? = runCatching {
         val body = AnilistQuery(ANILIST_QUERY, AnilistVariables(title)).toJsonRequestBody()
-        client.post("https://graphql.anilist.co", Fetch.XHR, body).parseAs<AnilistResponse>()
-            .data?.media?.coverImage?.large
+        val media = client.post("https://graphql.anilist.co", Fetch.XHR, body).parseAs<AnilistResponse>().data?.media
+            ?: return@runCatching null
+        // AniList search is fuzzy; only trust an exact title match so we never show another work's cover
+        val names = listOfNotNull(media.title?.romaji, media.title?.english) + media.synonyms
+        media.coverImage?.large.takeIf { names.any { it.normalized() == title.normalized() } }
     }.getOrNull()
+
+    private fun String.normalized() = lowercase().filter(Char::isLetterOrDigit)
 
     /** Joins the Next.js flight (RSC) payload chunks embedded in the page into one string. */
     private fun Document.flightData(): String = select("script").mapNotNull { script ->
@@ -220,6 +225,6 @@ abstract class AresManga : KeiSource() {
     }
 }
 
-private const val ANILIST_QUERY = "query(\$q:String){Media(search:\$q,type:MANGA){coverImage{large}}}"
+private const val ANILIST_QUERY = "query(\$q:String){Media(search:\$q,type:MANGA){title{romaji english} synonyms coverImage{large}}}"
 
 private const val FLIGHT_PREFIX = "self.__next_f.push([1,"
