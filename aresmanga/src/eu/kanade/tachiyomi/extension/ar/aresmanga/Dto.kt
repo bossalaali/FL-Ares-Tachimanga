@@ -1,5 +1,6 @@
 package eu.kanade.tachiyomi.extension.ar.aresmanga
 
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -43,3 +44,21 @@ class ChapterDto(
 class TeamDto(
     val name: String,
 )
+
+@Serializable
+class AnilistQuery(val query: String, val variables: AnilistVariables)
+
+@Serializable
+class AnilistVariables(val q: String)
+
+@Serializable
+class AnilistResponse(val data: AnilistData? = null)
+
+@Serializable
+class AnilistData(@SerialName("Media") val media: AnilistMedia? = null)
+
+@Serializable
+class AnilistMedia(val coverImage: AnilistCover? = null)
+
+@Serializable
+class AnilistCover(val large: String? = null)

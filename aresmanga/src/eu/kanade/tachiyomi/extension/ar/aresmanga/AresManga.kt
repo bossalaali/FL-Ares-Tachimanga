@@ -11,7 +11,9 @@ import keiyoushi.network.Fetch
 import keiyoushi.network.get
 import keiyoushi.source.KeiSource
 import keiyoushi.utils.asJsoup
+import keiyoushi.network.post
 import keiyoushi.utils.parseAs
+import keiyoushi.utils.toJsonRequestBody
 import keiyoushi.utils.tryParse
 import okhttp3.HttpUrl
 import okhttp3.HttpUrl.Companion.toHttpUrl
@@ -109,9 +111,10 @@ abstract class AresManga : KeiSource() {
                     "Cancelled", "Dropped" -> SManga.CANCELLED
                     else -> SManga.UNKNOWN
                 }
-                thumbnail_url = document.selectFirst("img[fetchpriority=high]:not(.wallpaper-img)")?.absUrl("src")
+                val cover = document.selectFirst("img[fetchpriority=high]:not(.wallpaper-img)")?.absUrl("src")
                     ?: document.selectFirst("img[src*=/media/covers/]:not(.wallpaper-img)")?.absUrl("src")
                     ?: manga.thumbnail_url
+                thumbnail_url = cover?.takeIf { isReachable(it) } ?: anilistCover(dto.title) ?: cover
             }
         } else {
             manga
@@ -157,6 +160,17 @@ abstract class AresManga : KeiSource() {
     }
 
     // ============================= Utilities =============================
+
+    private suspend fun isReachable(url: String): Boolean = runCatching {
+        client.get(url, Fetch.IMAGE, ensureSuccess = false).use { it.isSuccessful }
+    }.getOrDefault(false)
+
+    /** Some covers on the site are dead links; fall back to AniList's cover for the same title. */
+    private suspend fun anilistCover(title: String): String? = runCatching {
+        val body = AnilistQuery(ANILIST_QUERY, AnilistVariables(title)).toJsonRequestBody()
+        client.post("https://graphql.anilist.co", Fetch.XHR, body).parseAs<AnilistResponse>()
+            .data?.media?.coverImage?.large
+    }.getOrNull()
 
     /** Joins the Next.js flight (RSC) payload chunks embedded in the page into one string. */
     private fun Document.flightData(): String = select("script").mapNotNull { script ->
@@ -205,5 +219,7 @@ abstract class AresManga : KeiSource() {
         throw Exception("تعذر قراءة بيانات الصفحة")
     }
 }
+
+private const val ANILIST_QUERY = "query(\$q:String){Media(search:\$q,type:MANGA){coverImage{large}}}"
 
 private const val FLIGHT_PREFIX = "self.__next_f.push([1,"
