@@ -15,12 +15,24 @@ import keiyoushi.utils.parseAs
 import keiyoushi.utils.tryParse
 import okhttp3.HttpUrl
 import okhttp3.HttpUrl.Companion.toHttpUrl
+import okhttp3.OkHttpClient
 import org.jsoup.nodes.Document
 import kotlinx.serialization.json.JsonElement
 import kotlin.time.Instant
 
 @Source
 abstract class AresManga : KeiSource() {
+
+    // Some covers are hotlinked from other sites that reject a foreign Referer
+    override fun OkHttpClient.Builder.configureClient(): OkHttpClient.Builder = addInterceptor { chain ->
+        val request = chain.request()
+        val host = request.url.host
+        if (host == "fl-ares.com" || host.endsWith(".fl-ares.com")) {
+            chain.proceed(request)
+        } else {
+            chain.proceed(request.newBuilder().removeHeader("Referer").removeHeader("Origin").build())
+        }
+    }
 
     // ============================== Catalog ==============================
 
@@ -97,7 +109,8 @@ abstract class AresManga : KeiSource() {
                     "Cancelled", "Dropped" -> SManga.CANCELLED
                     else -> SManga.UNKNOWN
                 }
-                thumbnail_url = document.selectFirst("img[src*=/media/covers/]:not(.wallpaper-img)")?.absUrl("src")
+                thumbnail_url = document.selectFirst("img[fetchpriority=high]:not(.wallpaper-img)")?.absUrl("src")
+                    ?: document.selectFirst("img[src*=/media/covers/]:not(.wallpaper-img)")?.absUrl("src")
                     ?: manga.thumbnail_url
             }
         } else {
