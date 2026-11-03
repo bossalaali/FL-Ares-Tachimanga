@@ -1,4 +1,4 @@
-name: Build ARESManga extension
+name: Build extensions
 
 on:
   workflow_dispatch:
@@ -40,50 +40,18 @@ jobs:
             mkdir out && cd out && git init -b repo && git remote add origin "$url"
           fi
 
-      - name: Add ARESManga extension, drop all other extensions
+      - name: Add my extensions, drop all others
         run: |
           set -e
           cd kei
           find src -mindepth 1 -maxdepth 1 -type d ! -name ar -exec rm -rf {} +
           find src/ar -mindepth 1 -maxdepth 1 -type d -exec rm -rf {} +
-          if [ -d ../me/aresmanga ]; then
-            cp -r ../me/aresmanga src/ar/aresmanga
-          else
-            mkdir -p src/ar/aresmanga/src/eu/kanade/tachiyomi/extension/ar/aresmanga
-            cat > src/ar/aresmanga/build.gradle.kts <<'EOF'
-          import io.github.keiyoushi.gradle.api.ContentWarning
-
-          plugins {
-              alias(kei.plugins.extension)
-          }
-
-          keiyoushi {
-              name = "ARESManga"
-              versionCode = 1
-              contentWarning = ContentWarning.SAFE
-              libVersion = "1.6"
-              theme = "mangathemesia"
-
-              source {
-                  name = "أريس مانجا"
-                  lang = "ar"
-                  baseUrl = "https://fl-ares.com"
-              }
-          }
-          EOF
-            cat > src/ar/aresmanga/src/eu/kanade/tachiyomi/extension/ar/aresmanga/AresManga.kt <<'EOF'
-          package eu.kanade.tachiyomi.extension.ar.aresmanga
-
-          import eu.kanade.tachiyomi.multisrc.mangathemesia.MangaThemesia
-          import keiyoushi.annotation.Source
-
-          @Source
-          abstract class AresManga : MangaThemesia() {
-              override val mangaUrlDirectory = "/series"
-          }
-          EOF
-          fi
-          find src -type f
+          for f in ../me/*/build.gradle.kts; do
+            m=$(basename "$(dirname "$f")")
+            cp -r "../me/$m" "src/ar/$m"
+            echo "$m" >> ../modules.txt
+          done
+          cat ../modules.txt
 
       - name: Prepare signing key (kept stable in the repo branch)
         run: |
@@ -111,8 +79,10 @@ jobs:
           KEY_PASSWORD: extpass
         run: |
           cd kei
-          ./gradlew :src:ar:aresmanga:spotlessApply
-          ./gradlew :src:ar:aresmanga:assembleRelease
+          APPLY=(); BUILD=()
+          while read -r m; do APPLY+=(":src:ar:$m:spotlessApply"); BUILD+=(":src:ar:$m:assembleRelease"); done < ../modules.txt
+          ./gradlew "${APPLY[@]}"
+          ./gradlew "${BUILD[@]}"
 
       - name: Write repo (index.pb, index.json, index.min.json)
         env:
@@ -126,54 +96,54 @@ jobs:
           cd out
           rm -rf apk jar
           mkdir -p apk jar
-          cp ../kei/src/ar/aresmanga/build/outputs/apk/release/*.apk apk/
-          cp ../kei/src/ar/aresmanga/build/outputs/jar/release/*.jar jar/
-          cp ../kei/src/ar/aresmanga/build/keiyoushi-source-info.json .
+          cp ../kei/src/ar/*/build/outputs/apk/release/*.apk apk/
+          cp ../kei/src/ar/*/build/outputs/jar/release/*.jar jar/
           PYTHONPATH=../kei/.github/scripts python - <<'EOF'
-          import gzip, json, os
+          import glob, gzip, json, os
           from pathlib import Path
           import index_pb2
           from google.protobuf import json_format
 
           repo = os.environ["REPO"]
           raw = f"https://raw.githubusercontent.com/{repo}/repo"
-          info = json.load(open("keiyoushi-source-info.json", encoding="utf-8"))
-          apk = next(Path("apk").glob("*.apk")).name
-          jar = next(Path("jar").glob("*.jar")).name
-          icon = "https://cdn.jsdelivr.net/gh/keiyoushi/extensions-source@main/lib-multisrc/mangathemesia/res/mipmap-xhdpi/ic_launcher.png"
-
-          ext = index_pb2.Extension(
-              name=info["name"],
-              packageName=info["packageName"],
-              resources=index_pb2.Resources(apkUrl=f"{raw}/apk/{apk}", jarUrl=f"{raw}/jar/{jar}", iconUrl=icon),
-              extensionLib=info["extensionLib"],
-              versionCode=info["versionCode"],
-              versionName=info["versionName"],
-              contentWarning=info["contentWarning"],
-              sources=[index_pb2.Source(id=int(s["id"]), name=s["name"], language=s["lang"],
-                                        homeUrl=s["baseUrl"], mirrorUrls=s.get("mirrorUrls", []))
-                       for s in info["sources"]],
-          )
+          icon = "https://cdn.jsdelivr.net/gh/keiyoushi/extensions-source@main/core/src/main/res/mipmap-xhdpi/ic_launcher.png"
+          exts, legacy = [], []
+          for f in sorted(glob.glob("../kei/src/ar/*/build/keiyoushi-source-info.json")):
+              info = json.load(open(f, encoding="utf-8"))
+              build = Path(f).parent
+              apk = next((build / "outputs/apk/release").glob("*.apk")).name
+              jar = next((build / "outputs/jar/release").glob("*.jar")).name
+              exts.append(index_pb2.Extension(
+                  name=info["name"],
+                  packageName=info["packageName"],
+                  resources=index_pb2.Resources(apkUrl=f"{raw}/apk/{apk}", jarUrl=f"{raw}/jar/{jar}", iconUrl=icon),
+                  extensionLib=info["extensionLib"],
+                  versionCode=info["versionCode"],
+                  versionName=info["versionName"],
+                  contentWarning=info["contentWarning"],
+                  sources=[index_pb2.Source(id=int(s["id"]), name=s["name"], language=s["lang"],
+                                            homeUrl=s["baseUrl"], mirrorUrls=s.get("mirrorUrls", []))
+                           for s in info["sources"]],
+              ))
+              legacy.append({
+                  "name": "Tachiyomi: " + info["name"], "pkg": info["packageName"], "apk": apk,
+                  "lang": "ar", "code": info["versionCode"], "version": info["versionName"],
+                  "nsfw": 1 if info["contentWarning"] == "CONTENT_WARNING_NSFW" else 0,
+                  "sources": [{"name": s["name"], "lang": s["lang"], "id": str(s["id"]), "baseUrl": s["baseUrl"]}
+                              for s in info["sources"]],
+              })
           index = index_pb2.Index(
               name="My Extensions", badgeLabel="ME", signingKey=os.environ["FP"],
               contact=index_pb2.Contact(website=f"https://github.com/{repo}"),
-              extensionList=index_pb2.ExtensionList(extensions=[ext]),
+              extensionList=index_pb2.ExtensionList(extensions=exts),
           )
           Path("index.json").write_text(json_format.MessageToJson(index, preserving_proto_field_name=True), encoding="utf-8")
           Path("index.pb").write_bytes(gzip.compress(index.SerializeToString(deterministic=True), mtime=0))
-
-          nsfw = 1 if info["contentWarning"] == "CONTENT_WARNING_NSFW" else 0
-          legacy = [{
-              "name": "Tachiyomi: " + info["name"], "pkg": info["packageName"], "apk": apk,
-              "lang": "ar", "code": info["versionCode"], "version": info["versionName"], "nsfw": nsfw,
-              "sources": [{"name": s["name"], "lang": s["lang"], "id": str(s["id"]), "baseUrl": s["baseUrl"]}
-                          for s in info["sources"]],
-          }]
           Path("index.min.json").write_text(json.dumps(legacy, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
           Path("repo.json").write_text(json.dumps({"meta": {"name": "My Extensions", "signingKeyFingerprint": os.environ["FP"]}}), encoding="utf-8")
           print(Path("index.json").read_text(encoding="utf-8"))
           EOF
-          rm keiyoushi-source-info.json
+
 
       - name: Push repo branch
         run: |

@@ -1,6 +1,9 @@
 # FL-Ares Tachimanga
 
-إضافة موقع [أريس مانجا](https://fl-ares.com) لتطبيق Tachimanga / Mihon.
+إضافات عربية لتطبيق Tachimanga / Mihon:
+
+- [أريس مانجا](https://fl-ares.com) — مجلد `aresmanga/`
+- [مانجاوي](https://mangawy.org) — مجلد `mangawy/`
 
 ## الإضافة في التطبيق
 أضف هذا الرابط في مستودعات الإضافات:
@@ -16,5 +19,5 @@ https://raw.githubusercontent.com/bossalaali/FL-Ares-Tachimanga/repo/index.min.j
 ```
 
 ## التعديل
-كود الإضافة في مجلد `aresmanga/`. أي تعديل على `main` يعيد البناء تلقائياً، وكذلك كل أسبوع.
+كل مجلد فيه `build.gradle.kts` يُبنى كإضافة. أي تعديل على `main` يعيد البناء تلقائياً، وكذلك كل أسبوع.
 مبني على [keiyoushi/extensions-source](https://github.com/keiyoushi/extensions-source) (قالب MangaThemesia).
