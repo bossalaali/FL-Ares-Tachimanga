@@ -4,6 +4,7 @@
 
 - [أريس مانجا](https://fl-ares.com) — مجلد `aresmanga/`
 - [مانجاوي](https://mangawy.org) — مجلد `mangawy/`
+- [العاشق](https://3asq.online) — مجلد `alaashiq/`
 
 ## الإضافة في التطبيق
 أضف هذا الرابط في مستودعات الإضافات:
