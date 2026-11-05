@@ -1,0 +1,18 @@
+== ajax/chapters: 200 len=20337 li=50 links=50 first=['https://3asq.online/manga/bleach/6866/', 'https://3asq.online/manga/bleach/n-a_1/']
+   pagination: ['class="pagination"', 't=2', 'data-page="2"', 't=3', 'data-page="3"', 't=4']
+   dates: ['4 سبتمبر، 2023', '7 أغسطس، 2021', '1 أبريل، 2019']
+   snippet: <div class="c-blog__heading style-2 font-heading"> <h2 class="h4"> <i class="icon ion-ios-star"></i> فصول المانجا </h2> <a href="#" title="Change Order" class="btn-reverse-order"><i class="icon ion-md-swap"></i></a> </div> <div class="page-content-listing single-page"> <div class="listing-cha
+== ajax/chapters?t=2: 200 len=20260 li=50 links=50 first=['https://3asq.online/manga/bleach/641/', 'https://3asq.online/manga/bleach/640/']
+   pagination: ['class="pagination"', 't=1', 'data-page="1"', 't=3', 'data-page="3"', 't=4']
+   dates: ['1 أبريل، 2019', '1 أبريل، 2019', '1 أبريل، 2019']
+   snippet: <div class="c-blog__heading style-2 font-heading"> <h2 class="h4"> <i class="icon ion-ios-star"></i> فصول المانجا </h2> <a href="#" title="Change Order" class="btn-reverse-order"><i class="icon ion-md-swap"></i></a> </div> <div class="page-content-listing single-page"> <div class="listing-cha
+== admin-ajax: 400 len=1 li=0 links=0 first=[]
+   pagination: []
+   dates: []
+   snippet: 0
+== admin-ajax paged: 400 len=1 li=0 links=0 first=[]
+   pagination: []
+   dates: []
+   snippet: 0
+== chapter page 200 164356 imgs 15 ['https://3asq.online/wp-content/uploads/WP-manga/data/manga_5ca16670cf577/63732aa9cfaf343a5523fe60ca0a1b26/01.jpg', 'https://3asq.online/wp-content/uploads/WP-manga/data/manga_5ca16670cf577/63732aa9cfaf343a5523fe60ca0a1b26/02.jpg']
+   reading-content: True []
