@@ -8,6 +8,27 @@
   "extensionList": {
     "extensions": [
       {
+        "name": "Al-Aashiq",
+        "packageName": "eu.kanade.tachiyomi.extension.ar.alaashiq",
+        "resources": {
+          "apkUrl": "https://raw.githubusercontent.com/bossalaali/FL-Ares-Tachimanga/repo/apk/tachiyomi-ar.alaashiq-v1.6.1.apk",
+          "iconUrl": "https://cdn.jsdelivr.net/gh/keiyoushi/extensions-source@main/core/src/main/res/mipmap-xhdpi/ic_launcher.png",
+          "jarUrl": "https://raw.githubusercontent.com/bossalaali/FL-Ares-Tachimanga/repo/jar/tachiyomi-ar.alaashiq-v1.6.1.jar"
+        },
+        "extensionLib": "1.6",
+        "versionCode": "106001",
+        "versionName": "1.6.1",
+        "contentWarning": "CONTENT_WARNING_SAFE",
+        "sources": [
+          {
+            "id": "7256085803154879977",
+            "name": "\u0627\u0644\u0639\u0627\u0634\u0642",
+            "language": "ar",
+            "homeUrl": "https://3asq.online"
+          }
+        ]
+      },
+      {
         "name": "ARESManga",
         "packageName": "eu.kanade.tachiyomi.extension.ar.aresmanga",
         "resources": {
