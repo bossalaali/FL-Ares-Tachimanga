@@ -12,6 +12,7 @@ import keiyoushi.network.get
 import keiyoushi.network.post
 import keiyoushi.source.KeiSource
 import keiyoushi.utils.asJsoup
+import kotlinx.serialization.json.JsonElement
 import okhttp3.FormBody
 import okhttp3.HttpUrl
 import okhttp3.HttpUrl.Companion.toHttpUrl
@@ -24,12 +25,13 @@ abstract class AlAashiq : KeiSource() {
 
     // ============================== Browse ===============================
 
-    private suspend fun browse(page: Int, query: String, order: String?): MangasPage {
+    private suspend fun browse(page: Int, query: String, order: String?, filters: FilterList = FilterList()): MangasPage {
         val url = "$baseUrl/".toHttpUrl().newBuilder().apply {
             if (page > 1) addPathSegments("page/$page/")
             addQueryParameter("s", query.trim())
             addQueryParameter("post_type", "wp-manga")
             if (order != null) addQueryParameter("m_orderby", order)
+            filters.filterIsInstance<UrlFilter>().forEach { it.addTo(this) }
         }.build()
         val document = client.get(url, Fetch.DOCUMENT).asJsoup()
         val mangas = document.select("div.c-tabs-item__content").mapNotNull { card ->
@@ -48,7 +50,9 @@ abstract class AlAashiq : KeiSource() {
 
     override suspend fun getLatestUpdates(page: Int) = browse(page, "", "latest")
 
-    override suspend fun getSearchMangaList(page: Int, query: String, filters: FilterList) = browse(page, query, if (query.isBlank()) "views" else null)
+    override suspend fun getSearchMangaList(page: Int, query: String, filters: FilterList) = browse(page, query, null, filters)
+
+    override fun getFilterList(data: JsonElement?) = alAashiqFilters()
 
     override suspend fun getMangaByUrl(url: HttpUrl): SManga? {
         val segments = url.pathSegments.filter(String::isNotEmpty)
