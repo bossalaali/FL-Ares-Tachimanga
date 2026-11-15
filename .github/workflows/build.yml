@@ -116,7 +116,8 @@ jobs:
               exts.append(index_pb2.Extension(
                   name=info["name"],
                   packageName=info["packageName"],
-                  resources=index_pb2.Resources(apkUrl=f"{raw}/apk/{apk}", jarUrl=f"{raw}/jar/{jar}", iconUrl=icon),
+                  resources=index_pb2.Resources(apkUrl=f"{raw}/apk/{apk}", jarUrl=f"{raw}/jar/{jar}",
+                                             iconUrl="https://www.google.com/s2/favicons?sz=128&domain=" + info["sources"][0]["baseUrl"].split("/")[2]),
                   extensionLib=info["extensionLib"],
                   versionCode=info["versionCode"],
                   versionName=info["versionName"],

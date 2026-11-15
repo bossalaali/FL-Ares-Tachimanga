@@ -5,8 +5,8 @@ plugins {
 }
 
 keiyoushi {
-    name = "Al-Aashiq"
-    versionCode = 2
+    name = "العاشق"
+    versionCode = 3
     contentWarning = ContentWarning.SAFE
     libVersion = "1.6"
 

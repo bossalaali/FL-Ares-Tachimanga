@@ -14,6 +14,12 @@ class CatalogItemDto(
     val title: String,
     val slug: String,
     val poster: String? = null,
+    @SerialName("_count") val count: CountDto? = null,
+)
+
+@Serializable
+class CountDto(
+    val chapters: Int? = null,
 )
 
 @Serializable

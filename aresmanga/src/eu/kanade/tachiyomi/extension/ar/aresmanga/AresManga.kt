@@ -17,6 +17,9 @@ import keiyoushi.utils.toJsonRequestBody
 import keiyoushi.utils.tryParse
 import okhttp3.HttpUrl
 import okhttp3.HttpUrl.Companion.toHttpUrl
+import java.io.IOException
+import okhttp3.Response
+import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import org.jsoup.nodes.Document
 import kotlinx.serialization.json.JsonElement
@@ -26,7 +29,7 @@ import kotlin.time.Instant
 abstract class AresManga : KeiSource() {
 
     // Some covers are hotlinked from other sites that reject a foreign Referer
-    override fun OkHttpClient.Builder.configureClient(): OkHttpClient.Builder = addInterceptor { chain ->
+    override fun OkHttpClient.Builder.configureClient(): OkHttpClient.Builder = addInterceptor(::serverErrorInterceptor).addInterceptor { chain ->
         val request = chain.request()
         val host = request.url.host
         if (host == "fl-ares.com" || host.endsWith(".fl-ares.com")) {
@@ -51,7 +54,8 @@ abstract class AresManga : KeiSource() {
             addQueryParameter("page", page.toString())
         }.build()
         val data = client.get(apiUrl, Fetch.XHR).parseAs<CatalogDto>()
-        val mangas = data.items.map { item ->
+        // The site lists some works whose chapters were all removed; skip them
+        val mangas = data.items.filter { it.count?.chapters != 0 }.map { item ->
             SManga.create().apply {
                 url = "/manga/${item.slug}"
                 title = item.title
@@ -160,6 +164,17 @@ abstract class AresManga : KeiSource() {
     }
 
     // ============================= Utilities =============================
+
+    // Turn server-side outages into a clear Arabic message instead of a bare HTTP code
+    private fun serverErrorInterceptor(chain: Interceptor.Chain): Response {
+        val response = chain.proceed(chain.request())
+        if (response.code >= 500 && chain.request().url.host.endsWith(baseUrl.toHttpUrl().host)) {
+            val code = response.code
+            response.close()
+            throw IOException("الموقع معطل من عندهم حالياً (خطأ $code). جرّب بعد شوي")
+        }
+        return response
+    }
 
     private suspend fun isReachable(url: String): Boolean = runCatching {
         client.get(url, Fetch.IMAGE, ensureSuccess = false).use { it.isSuccessful }

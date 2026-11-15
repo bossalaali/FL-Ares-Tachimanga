@@ -5,8 +5,8 @@ plugins {
 }
 
 keiyoushi {
-    name = "Mangawy"
-    versionCode = 1
+    name = "مانجاوي"
+    versionCode = 2
     contentWarning = ContentWarning.SAFE
     libVersion = "1.6"
 

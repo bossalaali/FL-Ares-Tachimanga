@@ -16,12 +16,18 @@ import kotlinx.serialization.json.JsonElement
 import okhttp3.FormBody
 import okhttp3.HttpUrl
 import okhttp3.HttpUrl.Companion.toHttpUrl
+import java.io.IOException
+import okhttp3.Response
+import okhttp3.OkHttpClient
+import okhttp3.Interceptor
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 import java.util.Calendar
 
 @Source
 abstract class AlAashiq : KeiSource() {
+
+    override fun OkHttpClient.Builder.configureClient(): OkHttpClient.Builder = addInterceptor(::serverErrorInterceptor)
 
     // ============================== Browse ===============================
 
@@ -146,6 +152,17 @@ abstract class AlAashiq : KeiSource() {
     }
 
     // ============================= Utilities =============================
+
+    // Turn server-side outages into a clear Arabic message instead of a bare HTTP code
+    private fun serverErrorInterceptor(chain: Interceptor.Chain): Response {
+        val response = chain.proceed(chain.request())
+        if (response.code >= 500 && chain.request().url.host.endsWith(baseUrl.toHttpUrl().host)) {
+            val code = response.code
+            response.close()
+            throw IOException("الموقع معطل من عندهم حالياً (خطأ $code). جرّب بعد شوي")
+        }
+        return response
+    }
 
     private fun Element.imageUrl(): String? = listOf("data-src", "data-lazy-src", "src")
         .map { attr(it).trim() }
