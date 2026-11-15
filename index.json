@@ -8,16 +8,16 @@
   "extensionList": {
     "extensions": [
       {
-        "name": "Al-Aashiq",
+        "name": "\u0627\u0644\u0639\u0627\u0634\u0642",
         "packageName": "eu.kanade.tachiyomi.extension.ar.alaashiq",
         "resources": {
-          "apkUrl": "https://raw.githubusercontent.com/bossalaali/FL-Ares-Tachimanga/repo/apk/tachiyomi-ar.alaashiq-v1.6.2.apk",
-          "iconUrl": "https://cdn.jsdelivr.net/gh/keiyoushi/extensions-source@main/core/src/main/res/mipmap-xhdpi/ic_launcher.png",
-          "jarUrl": "https://raw.githubusercontent.com/bossalaali/FL-Ares-Tachimanga/repo/jar/tachiyomi-ar.alaashiq-v1.6.2.jar"
+          "apkUrl": "https://raw.githubusercontent.com/bossalaali/FL-Ares-Tachimanga/repo/apk/tachiyomi-ar.alaashiq-v1.6.3.apk",
+          "iconUrl": "https://www.google.com/s2/favicons?sz=128&domain=3asq.online",
+          "jarUrl": "https://raw.githubusercontent.com/bossalaali/FL-Ares-Tachimanga/repo/jar/tachiyomi-ar.alaashiq-v1.6.3.jar"
         },
         "extensionLib": "1.6",
-        "versionCode": "106002",
-        "versionName": "1.6.2",
+        "versionCode": "106003",
+        "versionName": "1.6.3",
         "contentWarning": "CONTENT_WARNING_SAFE",
         "sources": [
           {
@@ -29,16 +29,16 @@
         ]
       },
       {
-        "name": "ARESManga",
+        "name": "\u0623\u0631\u064a\u0633 \u0645\u0627\u0646\u062c\u0627",
         "packageName": "eu.kanade.tachiyomi.extension.ar.aresmanga",
         "resources": {
-          "apkUrl": "https://raw.githubusercontent.com/bossalaali/FL-Ares-Tachimanga/repo/apk/tachiyomi-ar.aresmanga-v1.6.5.apk",
-          "iconUrl": "https://cdn.jsdelivr.net/gh/keiyoushi/extensions-source@main/core/src/main/res/mipmap-xhdpi/ic_launcher.png",
-          "jarUrl": "https://raw.githubusercontent.com/bossalaali/FL-Ares-Tachimanga/repo/jar/tachiyomi-ar.aresmanga-v1.6.5.jar"
+          "apkUrl": "https://raw.githubusercontent.com/bossalaali/FL-Ares-Tachimanga/repo/apk/tachiyomi-ar.aresmanga-v1.6.6.apk",
+          "iconUrl": "https://www.google.com/s2/favicons?sz=128&domain=fl-ares.com",
+          "jarUrl": "https://raw.githubusercontent.com/bossalaali/FL-Ares-Tachimanga/repo/jar/tachiyomi-ar.aresmanga-v1.6.6.jar"
         },
         "extensionLib": "1.6",
-        "versionCode": "106005",
-        "versionName": "1.6.5",
+        "versionCode": "106006",
+        "versionName": "1.6.6",
         "contentWarning": "CONTENT_WARNING_SAFE",
         "sources": [
           {
@@ -50,16 +50,16 @@
         ]
       },
       {
-        "name": "Mangawy",
+        "name": "\u0645\u0627\u0646\u062c\u0627\u0648\u064a",
         "packageName": "eu.kanade.tachiyomi.extension.ar.mangawy",
         "resources": {
-          "apkUrl": "https://raw.githubusercontent.com/bossalaali/FL-Ares-Tachimanga/repo/apk/tachiyomi-ar.mangawy-v1.6.1.apk",
-          "iconUrl": "https://cdn.jsdelivr.net/gh/keiyoushi/extensions-source@main/core/src/main/res/mipmap-xhdpi/ic_launcher.png",
-          "jarUrl": "https://raw.githubusercontent.com/bossalaali/FL-Ares-Tachimanga/repo/jar/tachiyomi-ar.mangawy-v1.6.1.jar"
+          "apkUrl": "https://raw.githubusercontent.com/bossalaali/FL-Ares-Tachimanga/repo/apk/tachiyomi-ar.mangawy-v1.6.2.apk",
+          "iconUrl": "https://www.google.com/s2/favicons?sz=128&domain=mangawy.org",
+          "jarUrl": "https://raw.githubusercontent.com/bossalaali/FL-Ares-Tachimanga/repo/jar/tachiyomi-ar.mangawy-v1.6.2.jar"
         },
         "extensionLib": "1.6",
-        "versionCode": "106001",
-        "versionName": "1.6.1",
+        "versionCode": "106002",
+        "versionName": "1.6.2",
         "contentWarning": "CONTENT_WARNING_SAFE",
         "sources": [
           {
